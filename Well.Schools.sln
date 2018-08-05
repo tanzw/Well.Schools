@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Well.Schools", "Well.Schools\Well.Schools.csproj", "{46B2632D-3C70-4F9C-82BA-209565C7033C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{AB725E98-A2B5-4082-9633-93A66236FC31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{92FEF785-C61A-4687-883F-809C179C6441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{46B2632D-3C70-4F9C-82BA-209565C7033C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B2632D-3C70-4F9C-82BA-209565C7033C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46B2632D-3C70-4F9C-82BA-209565C7033C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB725E98-A2B5-4082-9633-93A66236FC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB725E98-A2B5-4082-9633-93A66236FC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB725E98-A2B5-4082-9633-93A66236FC31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB725E98-A2B5-4082-9633-93A66236FC31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92FEF785-C61A-4687-883F-809C179C6441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92FEF785-C61A-4687-883F-809C179C6441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92FEF785-C61A-4687-883F-809C179C6441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92FEF785-C61A-4687-883F-809C179C6441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
