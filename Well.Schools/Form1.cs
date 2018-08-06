@@ -35,48 +35,23 @@ namespace Well.Schools
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            //标签背景填充颜色
-            SolidBrush BackBrush = new SolidBrush(Color.Yellow);
-            //标签文字填充颜色
-            SolidBrush FrontBrush = new SolidBrush(Color.Black);
-            StringFormat StringF = new StringFormat();
-            //设置文字对齐方式
-            StringF.Alignment = StringAlignment.Center;
-            StringF.LineAlignment = StringAlignment.Center;
 
-            for (int i = 0; i < tabControl1.TabPages.Count; i++)
-            {
-                //获取标签头工作区域
-                Rectangle Rec = tabControl1.GetTabRect(i);
-                //绘制标签头背景颜色
-                e.Graphics.FillRectangle(BackBrush, Rec);
-                //绘制标签头文字
-                e.Graphics.DrawString(tabControl1.TabPages[i].Text, new Font("宋体", 12), FrontBrush, Rec, StringF);
-            }
-        }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-
-
+            BindRegisterList();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             this.SetDefaultSetting();
+            this.ShowInTaskbar = true;
             cbxCourse.SetDefaultSetting();
             cbxGrade.SetDefaultSetting();
             cbxYear.SetDefaultSetting();
             cbxStates.SetDefaultSetting();
             dataGridView1.SetDefaultSetting();
-            dataGridView2.SetDefaultSetting();
+            dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             ControlBindDataSource.BindCourse(cbxCourse);
             ControlBindDataSource.BindGrade(cbxGrade);
             ControlBindDataSource.BindYear(cbxYear);
@@ -90,7 +65,13 @@ namespace Well.Schools
             try
             {
                 Data.DataService service = new Data.DataService();
-                dataGridView1.DataSource = service.QueryRegList();
+                var studentId = !string.IsNullOrWhiteSpace(txtStudentId.Text) ? txtStudentId.Text.TryToInt() : 0;
+                var studentName = txtStudentName.Text.Trim();
+                var cid = cbxCourse.SelectedValue.ToInt();
+                var gid = cbxGrade.SelectedValue.ToInt();
+                var year = cbxYear.SelectedValue.ToInt();
+                var states = cbxStates.SelectedValue.ToInt();
+                dataGridView1.DataSource = service.QueryRegList(studentId, studentName, year, cid, gid, states);
             }
             catch (Exception ex)
             {
@@ -103,8 +84,47 @@ namespace Well.Schools
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            fmStudent fm = new fmStudent(1);
-            fm.ShowDialog();
+            fmStudent fm = new fmStudent();
+            if (fm.ShowDialog() == DialogResult.OK)
+            {
+                BindRegisterList();
+            }
+
+        }
+
+        private void 编辑ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sd = dataGridView1.CurrentRow.Cells[0].Value.ToString();
+            fmStudent fm = new fmStudent(sd.ToInt());
+            if (fm.ShowDialog() == DialogResult.OK)
+            {
+                BindRegisterList();
+            }
+        }
+
+        private void 查看学生ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sd = dataGridView1.CurrentRow.Cells[0].Value.ToString();
+            if (MessageBox.Show("确认提醒", "确认删除,删除后数据不可恢复?", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+            {
+                Data.DataService service = new Data.DataService();
+                if (service.DeleteReg(sd.ToInt()) > 0)
+                {
+                    MessageBox.Show("删除成功");
+                    BindRegisterList();
+                }
+                else
+                {
+                    MessageBox.Show("删除失败");
+                }
+            }
+
+
         }
     }
 }

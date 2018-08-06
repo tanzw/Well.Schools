@@ -24,6 +24,8 @@ namespace Well.Schools.Common
         public static void SetDefaultSetting(this DataGridView dg)
         {
             dg.AutoGenerateColumns = false;
+        
+            dg.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
     }
 }

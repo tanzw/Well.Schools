@@ -63,8 +63,11 @@ namespace Well.Schools.Common
                 throw new Exception("当前对象为null,不能转型");
             }
 
-            int o = errorDefaultValue;
-            int.TryParse(val, out errorDefaultValue);
+            int o = -1;
+            if (int.TryParse(val, out o))
+            {
+
+            }
             return o;
         }
 

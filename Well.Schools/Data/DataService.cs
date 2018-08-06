@@ -17,7 +17,6 @@ namespace Well.Schools.Data
             int result = 0;
             using (SchoolContext context = new SchoolContext())
             {
-                 
                 if (student.Id > 0)
                 {
                     var dataStudent = context.tb_student.FirstOrDefault(x => x.Id == student.Id);
@@ -37,12 +36,16 @@ namespace Well.Schools.Data
                     var dataReg = context.tb_Register.FirstOrDefault(x => x.Id == reg.Id);
                     dataReg.Money = reg.Money;
                     dataReg.States = reg.States;
-                    //dataReg.StudentId = student.Id;
                     dataReg.Year = reg.Year;
+                    dataReg.CourseId = reg.CourseId;
+                    dataReg.GradeId = reg.GradeId;
+
                 }
                 else
                 {
-                    //reg.StudentId = student.Id;
+                    reg.Student = student;
+                    reg.Course = context.tb_course.FirstOrDefault(x => x.Id == reg.CourseId);
+                    reg.Grade = context.tb_grade.FirstOrDefault(x => x.Id == reg.GradeId);
                     context.tb_Register.Add(reg);
                 }
 
@@ -83,7 +86,7 @@ namespace Well.Schools.Data
                 var dataReg = context.tb_Register.FirstOrDefault(x => x.Id == reg.Id);
                 dataReg.Money = reg.Money;
                 dataReg.States = reg.States;
-               // dataReg.StudentId = reg.StudentId;
+                // dataReg.StudentId = reg.StudentId;
                 dataReg.Year = reg.Year;
                 result = context.SaveChanges();
             }
@@ -97,7 +100,7 @@ namespace Well.Schools.Data
             var result = new List<tb_student>();
             using (SchoolContext context = new SchoolContext())
             {
-           
+
                 var data = context.tb_student.AsQueryable();
 
                 if (student != null && !string.IsNullOrWhiteSpace(student.Name))
@@ -115,14 +118,13 @@ namespace Well.Schools.Data
             return result;
         }
 
-        public List<RegisterView> QueryRegList()
+        public List<RegisterView> QueryRegList(int studentId, string name, int year, int courseId, int gradeId, int states)
         {
             var result = new List<RegisterView>();
             using (SchoolContext context = new SchoolContext())
             {
-                var s = context.tb_student.FirstOrDefault(x => x.Id == 1);
-                
-                result = context.Database.SqlQuery<RegisterView>(@"SELECT
+                var sql = new StringBuilder();
+                sql.Append(@"SELECT
 	a.Id AS RegId,
 	a.StudentId,
 	b.Name AS StudentName,
@@ -148,7 +150,35 @@ FROM
 	tb_Register AS a
 INNER JOIN tb_student AS b ON a.StudentId = b.Id
 INNER JOIN tb_grade AS c ON a.GradeId = c.Id
-INNER JOIN tb_course AS d ON a.CourseId = d.Id").ToList();
+INNER JOIN tb_course AS d ON a.CourseId = d.Id");
+                sql.Append(" where 1=1 ");
+                if (studentId > 0)
+                {
+                    sql.AppendFormat(" and a.StudentId={0}", studentId);
+                }
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    name = name.Replace("'", "").Replace("\"", "").Replace("+", "");
+
+                    sql.AppendFormat(" and b.Name like '%{0}%'", name);
+                }
+                if (year > 0)
+                {
+                    sql.AppendFormat(" and a.Year={0}", year);
+                }
+                if (courseId > 0)
+                {
+                    sql.AppendFormat(" and a.CourseId={0}", courseId);
+                }
+                if (gradeId > 0)
+                {
+                    sql.AppendFormat(" and a.GradeId={0}", gradeId);
+                }
+                if (states >= 0)
+                {
+                    sql.AppendFormat(" and a.States={0}", states);
+                }
+                result = context.Database.SqlQuery<RegisterView>(sql.ToString()).ToList();
 
 
 
@@ -158,5 +188,36 @@ INNER JOIN tb_course AS d ON a.CourseId = d.Id").ToList();
             return result;
         }
 
+        public tb_Register GetRegisterModel(int id)
+        {
+            tb_Register result = null;
+            using (SchoolContext context = new SchoolContext())
+            {
+                result = context.tb_Register.FirstOrDefault(x => x.Id == id);
+            }
+            return result;
+        }
+
+        public tb_student GetStudentModel(int id)
+        {
+            tb_student result = null;
+            using (SchoolContext context = new SchoolContext())
+            {
+                result = context.tb_student.FirstOrDefault(x => x.Id == id);
+            }
+            return result;
+        }
+
+        public int DeleteReg(int regId)
+        {
+            int result = 0;
+            using (SchoolContext context = new SchoolContext())
+            {
+                context.tb_Register.Remove(context.tb_Register.FirstOrDefault(x => x.Id == regId));
+                result = context.SaveChanges();
+            }
+            return result;
+
+        }
     }
 }

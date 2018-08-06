@@ -63,7 +63,7 @@ namespace Well.Schools.Common
             List<KeyValue<int, String>> data = new List<KeyValue<int, string>>();
             if (isDefault)
             {
-                data.Add(new KeyValue<int, string>() { Key = 0, Value = "请选择" });
+                data.Add(new KeyValue<int, string>() { Key = -1, Value = "请选择" });
             }
             data.Add(new KeyValue<int, string>() { Key = (int)EFModel.States.已缴, Value = EFModel.States.已缴.ToString() });
             data.Add(new KeyValue<int, string>() { Key = (int)EFModel.States.未缴, Value = EFModel.States.未缴.ToString() });

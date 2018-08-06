@@ -38,20 +38,18 @@ namespace Well.Schools.EFModel
                 new tb_course { Id = 2, Name = "秋季" },
                 new tb_course { Id = 3, Name = "全年" }
             );
-
-            modelBuilder.Entity<tb_student>().HasData(new tb_student()
+            var student = new tb_student()
             {
                 Id = 10001,
                 Address = "杭州市文三路XXX号",
                 Contact = "13888888888",
                 Description = "测试说明",
                 Name = "张三",
-                RegisterList = new List<tb_Register>() {
-                     new tb_Register(){  Id=1, Course=c, CreateAt=DateTime.Now, Grade=grade1, Money=100, States=1, Year=2018 }
-
-                },
+                RegisterList = new List<tb_Register>(),
                 Sex = 1
-            });
+            };
+            modelBuilder.Entity<tb_student>().HasData(student);
+            // modelBuilder.Entity<tb_Register>().HasData(new tb_Register() { Id = 1, Course = c, Grade = grade1, Money = 100, Year = 2018, States = 1, CreateAt = DateTime.Now, Student = student });
             base.OnModelCreating(modelBuilder);
         }
 
@@ -111,9 +109,18 @@ namespace Well.Schools.EFModel
         [ForeignKey("StudentId")]
         public tb_student Student { get; set; }
 
+       
+        public int StudentId { get; set; }
+
+        [ForeignKey("GradeId")]
         public tb_grade Grade { get; set; }
 
+        public int GradeId { get; set; }
+
+
+        [ForeignKey("CourseId")]
         public tb_course Course { get; set; }
+        public int CourseId { get; set; }
 
         public decimal Money { get; set; }
 
